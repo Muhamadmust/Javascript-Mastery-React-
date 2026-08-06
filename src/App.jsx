@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import Search from "./components/Search.jsx";
 
-// API: Application Programing interface
+// API: Application Programing interface - a set of rules that allows one software application to talk to another
 
 const API_BASE_URL = 'https://api.themoviedb.org/3'
 
-const API_KEY = import.meta.env.VITE_TMBD_API_KEY;
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 const API_OPTIONS = {
     method: 'GET',
@@ -21,13 +21,15 @@ const App = () => {
 
     const [errorMessage, setErrorMessage] = useState('');
 
+
     const fetchMovies = async () => {
         try {
-            const endpoint = `${API_BASE_URL}/dicover/ movie?sort_by=popularity.desc`
+            const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
 
             const response = await fetch(endpoint, API_OPTIONS)
 
             if (!response.ok) {
+
                 throw new Error('Failed to fetch movies.');
             }
 
@@ -52,7 +54,7 @@ const App = () => {
                     <img src={"./hero.png"} alt="Hero Banner" />
                     <h1>Find <span className="text-gradient">Movies</span> You'll Enjoy Without the Hassle</h1>
 
-                <Search serchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+                <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
                 </header>
 
                 <section className="all-movies">
