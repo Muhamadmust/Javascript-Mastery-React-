@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import Search from "./components/Search.jsx";
+import Spinner from "./components/Spinner.jsx";
+import MovieCard from "./components/MovieCard.jsx";
 
 // API: Application Programing interface - a set of rules that allows one software application to talk to another
 
@@ -20,21 +22,19 @@ const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [movieList, setMovieList] = useState([])
-    const [loading, setLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
 
     const fetchMovies = async () => {
-        setLoading(true)
-        setErrorMessage('')
 
         try {
+            setIsLoading(true)
+            setErrorMessage('')
+
             const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
             const response = await fetch(endpoint, API_OPTIONS)
 
-
-            alert(response)
             if (!response.ok) {
-
                 throw new Error('Failed to fetch movies.');
             }
 
@@ -51,7 +51,7 @@ const App = () => {
             console.log(`Error Fetching Movies ${error}`);
             setErrorMessage('Error Fetching Movies. Please try again later.');
         } finally {
-            setLoading(false)
+            setIsLoading(false)
         }
     }
 
@@ -72,9 +72,19 @@ const App = () => {
                 </header>
 
                 <section className="all-movies">
-                    <h2>All Movies</h2>
+                    <h2 className="mt-[40px]">All Movies</h2>
 
-                    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                    {isLoading ? (
+                        <Spinner />
+                    ) : errorMessage ? (
+                        <p className="text-red-500">{errorMessage}</p>
+                    ) : (
+                        <ul>
+                            {movieList.map((movie) => (
+                                <MovieCard key={movie.id} movie={movie} />
+                            ))}
+                        </ul>
+                    )}
                 </section>
             </div>
         </main>
